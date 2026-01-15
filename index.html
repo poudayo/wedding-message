@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wedding Message</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: #f6f6f4;
+  font-family: "Noto Sans JP", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  width: 90%;
+  max-width: 600px;
+  background: white;
+  padding: 48px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  animation: fadeIn 1s ease;
+}
+
+h1 {
+  font-family: "Playfair Display", serif;
+  font-size: 26px;
+  margin-bottom: 4px;
+}
+
+.couple {
+  font-family: "Playfair Display", serif;
+  font-size: 14px;
+  letter-spacing: 0.15em;
+  margin-bottom: 24px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 32px;
+}
+
+input, textarea {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  padding: 12px 4px;
+  font-size: 16px;
+  margin-bottom: 24px;
+  background: transparent;
+}
+
+textarea {
+  resize: none;
+  height: 80px;
+}
+
+button {
+  background: black;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 14px;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+.subBtn {
+  margin-top: 16px;
+  background: none;
+  color: #555;
+  border-bottom: 1px solid #999;
+  font-size: 12px;
+}
+
+.character img {
+  width: 180px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.message {
+  margin-top: 16px;
+  font-size: 16px;
+  white-space: pre-line;
+}
+
+.list {
+  text-align: left;
+  font-size: 14px;
+}
+
+.listItem {
+  margin-bottom: 16px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; }
+}
+
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- 入力画面 -->
+<div class="container" id="formArea">
+  <h1>Thank you for celebrating our wedding</h1>
+  <div class="couple">YOSHITOMO & MISATO</div>
+  <div class="subtitle">よかったらお祝いのメッセージください！</div>
+
+  <input type="text" id="name" placeholder="お名前" />
+  <textarea id="message" placeholder="お祝いメッセージ"></textarea>
+
+  <button onclick="sendMessage()">SEND</button><br>
+  <button class="subBtn" onclick="showList()">メッセージ一覧を見る</button>
+</div>
+
+<!-- お礼画面 -->
+<div class="container" id="resultArea" style="display:none;">
+  <div class="character">
+    <img id="charImg" src="">
+  </div>
+  <div class="message" id="thankYou"></div>
+
+  <button class="subBtn" onclick="resetForm()">もう一度書く</button>
+</div>
+
+<!-- 一覧画面 -->
+<div class="container" id="listArea" style="display:none;">
+  <h1>Messages</h1>
+  <div class="list" id="messageList"></div>
+  <button class="subBtn" onclick="backToForm()">戻る</button>
+</div>
+
+<script>
+const characters = [
+  {
+    image: "dog.png",
+    messages: [
+      "しっぽ振りながらとっても嬉しいです！",
+      "最高の日を一緒にお祝いしてくれてありがとう！",
+      "いっぱいの愛をありがとう！"
+    ]
+  },
+  {
+    image: "cat.png",
+    messages: [
+      "心から感謝しています。",
+      "そっと寄り添ってくれてありがとう。",
+      "忘れられない一日になりました。"
+    ]
+  }
+];
+
+function sendMessage() {
+  const name = document.getElementById("name").value || "ゲストさん";
+  const text = document.getElementById("message").value;
+
+  const char = characters[Math.floor(Math.random() * characters.length)];
+  const line = char.messages[Math.floor(Math.random() * char.messages.length)];
+
+  document.getElementById("charImg").src = char.image;
+  document.getElementById("thankYou").innerText =
+    `${name}、ありがとう。\n${line}`;
+
+  const data = JSON.parse(localStorage.getItem("weddingMessages") || "[]");
+  data.push({
+    name: name,
+    message: text,
+    character: char.image,
+    time: new Date().toLocaleString()
+  });
+  localStorage.setItem("weddingMessages", JSON.stringify(data));
+
+  document.getElementById("formArea").style.display = "none";
+  document.getElementById("resultArea").style.display = "block";
+}
+
+function resetForm() {
+  document.getElementById("name").value = "";
+  document.getElementById("message").value = "";
+  document.getElementById("formArea").style.display = "block";
+  document.getElementById("resultArea").style.display = "none";
+}
+
+function showList() {
+  const list = document.getElementById("messageList");
+  list.innerHTML = "";
+  const data = JSON.parse(localStorage.getItem("weddingMessages") || "[]");
+
+  data.forEach(d => {
+    list.innerHTML += `
+      <div class="listItem">
+        <strong>${d.name}</strong><br>
+        ${d.message || "（メッセージなし）"}<br>
+        <small>${d.time}</small>
+      </div>
+    `;
+  });
+
+  document.getElementById("formArea").style.display = "none";
+  document.getElementById("listArea").style.display = "block";
+}
+
+function backToForm() {
+  document.getElementById("listArea").style.display = "none";
+  document.getElementById("formArea").style.display = "block";
+}
+</script>
+
+</body>
+</html>
