@@ -1,229 +1,236 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Wedding Message</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wedding Message</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 
-<style>
-body {
-  margin: 0;
-  height: 100vh;
-  background: #f6f6f4;
-  font-family: "Noto Sans JP", sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  <style>
+    * { box-sizing: border-box; }
 
-.container {
-  width: 90%;
-  max-width: 600px;
-  background: white;
-  padding: 48px;
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-  animation: fadeIn 1s ease;
-}
+    body {
+      margin: 0;
+      font-family: 'Noto Sans JP', sans-serif;
+      background: linear-gradient(180deg, #faf7f3, #ffffff);
+      overflow: hidden;
+      color: #333;
+    }
 
-h1 {
-  font-family: "Playfair Display", serif;
-  font-size: 26px;
-  margin-bottom: 4px;
-}
+    /* ===== バブル演出 ===== */
+    .bubble {
+      position: fixed;
+      bottom: -10%;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(255,255,255,0.25));
+      opacity: 0.7;
+      animation: floatUp linear infinite;
+      z-index: 0;
+    }
 
-.couple {
-  font-family: "Playfair Display", serif;
-  font-size: 14px;
-  letter-spacing: 0.15em;
-  margin-bottom: 24px;
-}
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(0.8);
+      }
+      100% {
+        transform: translateY(-120vh) scale(1.2);
+      }
+    }
 
-.subtitle {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 32px;
-}
+    /* ===== レイアウト ===== */
+    .container {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
 
-input, textarea {
-  width: 100%;
-  border: none;
-  border-bottom: 1px solid #ccc;
-  padding: 12px 4px;
-  font-size: 16px;
-  margin-bottom: 24px;
-  background: transparent;
-}
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+    }
 
-textarea {
-  resize: none;
-  height: 80px;
-}
+    .subtitle {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 30px;
+    }
 
-button {
-  background: black;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  font-size: 14px;
-  cursor: pointer;
-  letter-spacing: 0.05em;
-}
+    .thankyou-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      margin-bottom: 12px;
+    }
 
-button:hover {
-  opacity: 0.8;
-}
+    input, textarea {
+      width: 90%;
+      max-width: 500px;
+      padding: 14px;
+      margin: 10px 0;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+      font-family: inherit;
+    }
 
-.subBtn {
-  margin-top: 16px;
-  background: none;
-  color: #555;
-  border-bottom: 1px solid #999;
-  font-size: 12px;
-}
+    button {
+      margin-top: 20px;
+      padding: 14px 36px;
+      font-size: 16px;
+      border: none;
+      border-radius: 999px;
+      background: #222;
+      color: #fff;
+      cursor: pointer;
+    }
 
-.character img {
-  width: 180px;
-  animation: float 3s ease-in-out infinite;
-}
+    button.secondary {
+      background: none;
+      color: #555;
+      text-decoration: underline;
+      margin-top: 16px;
+    }
 
-.message {
-  margin-top: 16px;
-  font-size: 16px;
-  white-space: pre-line;
-}
+    .character {
+      width: 160px;
+      margin: 20px 0;
+      animation: bounce 1.8s infinite ease-in-out;
+    }
 
-.list {
-  text-align: left;
-  font-size: 14px;
-}
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
 
-.listItem {
-  margin-bottom: 16px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 8px;
-}
+    .hidden { display: none; }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; }
-}
+    /* Thank you フェードイン */
+    .fade-in {
+      animation: fadeIn 0.8s ease forwards;
+    }
 
-@keyframes float {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-</style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* メッセージ一覧 */
+    .log {
+      font-size: 14px;
+      text-align: left;
+      max-width: 600px;
+      margin: 10px auto;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+    }
+  </style>
 </head>
-
 <body>
 
-<!-- 入力画面 -->
-<div class="container" id="formArea">
-  <h1>Thank you for celebrating our wedding</h1>
-  <div class="couple">YOSHITOMO & MISATO</div>
-  <div class="subtitle">よかったらお祝いのメッセージください！</div>
+<!-- ===== バブル生成 ===== -->
+<script>
+  for (let i = 0; i < 18; i++) {
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.style.left = Math.random() * 100 + 'vw';
+    bubble.style.animationDuration = 10 + Math.random() * 6 + 's';
+    bubble.style.animationDelay = Math.random() * 5 + 's';
+    document.body.appendChild(bubble);
+  }
+</script>
 
-  <input type="text" id="name" placeholder="お名前" />
-  <textarea id="message" placeholder="お祝いメッセージ"></textarea>
+<!-- ===== 入力画面 ===== -->
+<div class="container" id="formScreen">
+  <h1>YOSHITOMO ＆ MISATO</h1>
+  <div class="subtitle">よかったら、ひとことお祝いメッセージをお願いします！</div>
 
-  <button onclick="sendMessage()">SEND</button><br>
-  <button class="subBtn" onclick="showList()">メッセージ一覧を見る</button>
+  <input id="nameInput" type="text" placeholder="お名前" />
+  <textarea id="messageInput" rows="4" placeholder="メッセージ"></textarea>
+
+  <button onclick="submitMessage()">送信</button>
 </div>
 
-<!-- お礼画面 -->
-<div class="container" id="resultArea" style="display:none;">
-  <div class="character">
-    <img id="charImg" src="">
-  </div>
-  <div class="message" id="thankYou"></div>
-
-  <button class="subBtn" onclick="resetForm()">もう一度書く</button>
+<!-- ===== Thank you 画面 ===== -->
+<div class="container hidden fade-in" id="thankYouScreen">
+  <div class="thankyou-title">Thank you for celebrating our wedding</div>
+  <img id="characterImage" class="character" src="" alt="character" />
+  <h2 id="thankYouText"></h2>
+  <button class="secondary" onclick="resetScreen()">はじめに戻る</button>
+  <button class="secondary" onclick="showLog()">メッセージ一覧を見る</button>
 </div>
 
-<!-- 一覧画面 -->
-<div class="container" id="listArea" style="display:none;">
-  <h1>Messages</h1>
-  <div class="list" id="messageList"></div>
-  <button class="subBtn" onclick="backToForm()">戻る</button>
+<!-- ===== メッセージ一覧 ===== -->
+<div class="container hidden" id="logScreen">
+  <h2 class="thankyou-title">Messages</h2>
+  <div id="logList"></div>
+  <button class="secondary" onclick="backToTop()">戻る</button>
 </div>
 
 <script>
-const characters = [
-  {
-    image: "dog.png",
-    messages: [
-      "しっぽ振りながらとっても嬉しいです！",
-      "最高の日を一緒にお祝いしてくれてありがとう！",
-      "いっぱいの愛をありがとう！"
-    ]
-  },
-  {
-    image: "cat.png",
-    messages: [
-      "心から感謝しています。",
-      "そっと寄り添ってくれてありがとう。",
-      "忘れられない一日になりました。"
-    ]
+  const characters = [
+    {
+      img: 'dog.png',
+      lines: ['ありがとう！', '来てくれてうれしいワン！', '最高の日を一緒に楽しもう！']
+    },
+    {
+      img: 'cat.png',
+      lines: ['ありがとうにゃ！', '来てくれて感謝です', 'ゆっくり楽しんでね']
+    }
+  ];
+
+  function submitMessage() {
+    const name = nameInput.value.trim();
+    if (!name) return alert('お名前を入力してください');
+
+    const chara = characters[Math.floor(Math.random() * characters.length)];
+    const line = chara.lines[Math.floor(Math.random() * chara.lines.length)];
+
+    characterImage.src = chara.img;
+    thankYouText.innerText = `${name}さん、${line}`;
+
+    const logs = JSON.parse(localStorage.getItem('messages') || '[]');
+    logs.push({ name, message: messageInput.value, date: new Date().toLocaleString() });
+    localStorage.setItem('messages', JSON.stringify(logs));
+
+    formScreen.classList.add('hidden');
+    thankYouScreen.classList.remove('hidden');
   }
-];
 
-function sendMessage() {
-  const name = document.getElementById("name").value || "ゲストさん";
-  const text = document.getElementById("message").value;
+  function resetScreen() {
+    nameInput.value = '';
+    messageInput.value = '';
+    thankYouScreen.classList.add('hidden');
+    formScreen.classList.remove('hidden');
+  }
 
-  const char = characters[Math.floor(Math.random() * characters.length)];
-  const line = char.messages[Math.floor(Math.random() * char.messages.length)];
+  function showLog() {
+    logList.innerHTML = '';
+    const logs = JSON.parse(localStorage.getItem('messages') || '[]');
+    logs.forEach(l => {
+      const div = document.createElement('div');
+      div.className = 'log';
+      div.innerText = `${l.date} / ${l.name}さん：${l.message}`;
+      logList.appendChild(div);
+    });
+    thankYouScreen.classList.add('hidden');
+    logScreen.classList.remove('hidden');
+  }
 
-  document.getElementById("charImg").src = char.image;
-  document.getElementById("thankYou").innerText =
-    `${name}、ありがとう。\n${line}`;
-
-  const data = JSON.parse(localStorage.getItem("weddingMessages") || "[]");
-  data.push({
-    name: name,
-    message: text,
-    character: char.image,
-    time: new Date().toLocaleString()
-  });
-  localStorage.setItem("weddingMessages", JSON.stringify(data));
-
-  document.getElementById("formArea").style.display = "none";
-  document.getElementById("resultArea").style.display = "block";
-}
-
-function resetForm() {
-  document.getElementById("name").value = "";
-  document.getElementById("message").value = "";
-  document.getElementById("formArea").style.display = "block";
-  document.getElementById("resultArea").style.display = "none";
-}
-
-function showList() {
-  const list = document.getElementById("messageList");
-  list.innerHTML = "";
-  const data = JSON.parse(localStorage.getItem("weddingMessages") || "[]");
-
-  data.forEach(d => {
-    list.innerHTML += `
-      <div class="listItem">
-        <strong>${d.name}</strong><br>
-        ${d.message || "（メッセージなし）"}<br>
-        <small>${d.time}</small>
-      </div>
-    `;
-  });
-
-  document.getElementById("formArea").style.display = "none";
-  document.getElementById("listArea").style.display = "block";
-}
-
-function backToForm() {
-  document.getElementById("listArea").style.display = "none";
-  document.getElementById("formArea").style.display = "block";
-}
+  function backToTop() {
+    logScreen.classList.add('hidden');
+    formScreen.classList.remove('hidden');
+  }
 </script>
 
 </body>
